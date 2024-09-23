@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+  nginx_proxy_manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: 'nginx-proxy-manager'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./nginx-proxy-manager/data:/data
+      - ./nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+  nextcloud:
+    image: nextcloud:latest
+    container_name: 'nextcloud'
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Kiev
+    volumes:
+      - ./nextcloud/appdata:/config
+      - ./nextcloud/data:/data
+  home-assistant:
+    image: homeassistant/home-assistant:latest
+    container_name: 'home-assistant'
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Kiev
+    volumes:
+      - ./home-assistant/config:/config
+  jelly-fin:
+    image: jellyfin/jellyfin:latest
+    container_name: 'jelly-fin'
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Kiev
+    volumes:
+      - ./jelly-fin/config:/config
+      - ./jelly-fin/tv-shows:/data/tv-shows
+      - ./jelly-fin/movies:/data/movies
